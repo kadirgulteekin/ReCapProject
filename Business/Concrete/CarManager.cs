@@ -4,25 +4,28 @@ using DataAccess.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Entities.DTOs;
 
 namespace Business.Concrete
 {
     public class CarManager : ICarService
     {
-        ICarDal _carDal;
-        IBrandDal _brandDal;
+        ICarDal _carDal;  //Veritabanı bağımlılığımı azaltmak için Constructur Injection ile yapıyorum.
+        //IBrandDal _brandDal;
 
-        public CarManager(IBrandDal brandDal)
-        {
-            _brandDal = brandDal;
-        }
+        //public CarManager(IBrandDal brandDal)
+        //{
+        //    _brandDal = brandDal; //Ben CarManager olarak veri erişim katmanına bağlımlıyım ama biraz az bağımlılığım var.
+        //    //Ben Interface üzerinden bağımlıyım o yüzden sen DataAccess katmanında istediğini yapabilirsin.
+            
+        //}
 
-        IColorDal _colorDal;
+        //IColorDal _colorDal;
 
-        public CarManager(IColorDal colorDal)
-        {
-            _colorDal = colorDal;
-        }
+        //public CarManager(IColorDal colorDal)
+        //{
+        //    _colorDal = colorDal;
+        //}
 
         public CarManager(ICarDal carDal)
         {
@@ -65,6 +68,11 @@ namespace Business.Concrete
         public void Update(Car car)
         {
             _carDal.Update(car);
+        }
+
+        public List<CarDetailDto> GetCarDetails()
+        {
+            return _carDal.GetCarDetails();
         }
     }
 }
