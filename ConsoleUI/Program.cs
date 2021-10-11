@@ -13,9 +13,9 @@ namespace ConsoleUI
         {
             //carmanager carmanager = cartest();
             //GetCarDetails();
-            //AddRents();
+            AddRents();
             //AddUser();
-            
+
 
         }
 
@@ -39,19 +39,10 @@ namespace ConsoleUI
 
         private static void AddRents()
         {
-            Rental rental = new Rental { CarId = 3, CustomerId = 1, RentDate = DateTime.Now };
-
             RentalsManager rentalManager = new RentalsManager(new EfRentalsDal());
+            Rental rental = new Rental { CarId = 1, CustomerId = 2, RentDate = new DateTime(2021, 10, 6) };
             var result = rentalManager.Add(rental);
-            if (result.Success == true)
-            {
-
-                Console.WriteLine(result.Message);
-            }
-            else
-            {
-                Console.WriteLine(result.Message);
-            }
+            Console.WriteLine(result.Message);
         }
 
         private static void GetCarDetails()
