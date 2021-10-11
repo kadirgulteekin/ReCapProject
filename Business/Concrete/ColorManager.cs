@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -16,33 +18,43 @@ namespace Business.Concrete
             _colorDal = colorDal;
         }
 
-        public void Add(Color color)
+        public IResult Add(Color color)
         {
-            if (color.ColorName.Length > 2)
-                _colorDal.Add(color);
-            else
-                Console.WriteLine("Renk ismi en az 2 karakter olmalıdır.");
+            if (color.ColorName.Length < 2)
+            {
+                return new ErrorResult(Messages.ColorNameInValid);
+            }
+            _colorDal.Add(color);
+            return new SuccessResult(Messages.ColorAdded);
+
         }
 
-        public void Delete(Color color)
+        public IResult Delete(Color color)
         {
             _colorDal.Delete(color);
+            return new SuccessResult(Messages.ColorDeleted);
         }
 
-        public List<Color> GetAll()
+        public IDataResult<List<Color>> GetAll()
         {
-            return _colorDal.GetAll();
+            if (DateTime.Now.Hour==21)
+            {
+                return new ErrorDataResult<List<Color>>(Messages.MaintananceTime);
+            }
+
+            return new SuccessDataResult<List<Color>>(_colorDal.GetAll(), Messages.ColorsListed);
         }
 
        
-        public List<Color> GetId(int id)
+        public IDataResult<List<Color>> GetId(int id)
         {
-            return _colorDal.GetAll(p => p.ColorId == id);
+            return new SuccessDataResult<List<Color>>(_colorDal.GetAll(p => p.ColorId == id));
         }
 
-        public void Update(Color color)
+        public IResult Update(Color color)
         {
             _colorDal.Update(color);
+            return new SuccessResult(Messages.ColorUpdated);
         }
     }
 }

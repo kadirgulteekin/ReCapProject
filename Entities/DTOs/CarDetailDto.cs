@@ -15,4 +15,6 @@ namespace Entities.DTOs
         public string ColorName { get; set; }
 
     }
+
+    
 }
