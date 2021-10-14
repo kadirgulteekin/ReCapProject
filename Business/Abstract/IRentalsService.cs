@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Business.Abstract
 {
-    interface IRentalsService
+    public interface IRentalsService
     {
 
         IDataResult<List<CarRentDetailDto>> GetCarRentDetail();
