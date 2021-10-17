@@ -7,6 +7,9 @@ using System.Text;
 using Entities.DTOs;
 using Core.Utilities.Results;
 using Business.Constants;
+using FluentValidation;
+using Business.ValidationRules.FluentValidation;
+using Core.CrossCuttingConcerns.Validation;
 
 namespace Business.Concrete
 {
@@ -21,10 +24,9 @@ namespace Business.Concrete
 
         public IResult Add(Car car)
         {
-            if (car.Description.Length < 2 && car.DailyPrice < 0)
-            {
-                return new ErrorResult(Messages.CarNameInValid);
-            }
+
+        
+            ValidationTool.Validate(new CarValidator(), car);
             _carDal.Add(car);
             return new SuccessResult(Messages.CarAdded);
              
