@@ -11,27 +11,33 @@ using FluentValidation;
 using Business.ValidationRules.FluentValidation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Aspects.Autofac.Validation;
+using System.Linq;
+using Core.Utilities.Business;
 
 namespace Business.Concrete
 {
     public class CarManager : ICarService
     {
         ICarDal _carDal;  //Veritabanı bağımlılığımı azaltmak için Constructur Injection ile yapıyorum.
-       
-        public CarManager(ICarDal carDal)
+        ICarImageService _carImageService;
+
+        public CarManager(ICarDal carDal,ICarImageService carImageService)
         {
             _carDal = carDal;
+            _carImageService = carImageService;
+
         }
 
 
         [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
+            IResult result = BusinessRules.Run(CheckIfCarImageCountExceded());
 
 
             _carDal.Add(car);
             return new SuccessResult(Messages.CarAdded);
-             
+
         }
 
         public IResult Delete(Car car)
@@ -42,7 +48,7 @@ namespace Business.Concrete
 
         public IDataResult<List<Car>> GetAll()
         {
-            if (DateTime.Now.Hour==20)
+            if (DateTime.Now.Hour == 20)
             {
                 return new ErrorDataResult<List<Car>>(Messages.MaintananceTime);
             }
@@ -55,7 +61,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.DailyPrice >= min && p.DailyPrice <= max));
         }
 
-        public IDataResult<List<Car>>GetCarsByBrandId(int id)
+        public IDataResult<List<Car>> GetCarsByBrandId(int id)
         {
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.BrandId == id));
         }
@@ -79,6 +85,16 @@ namespace Business.Concrete
         public IDataResult<List<Car>> GetById(int carId)
         {
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.Id == carId));
+        }
+
+        private IResult CheckIfCarImageCountExceded()
+        {
+            var result = _carImageService.GetAll();
+            if (result.Data.Count >= 5)
+            {
+                return new ErrorResult(Messages.CarImageCountExceded);
+            }
+            return new SuccessResult();
         }
     }
 }

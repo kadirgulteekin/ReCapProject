@@ -27,6 +27,12 @@ namespace Business.Constants
         public static string RentsUpdated = "Satış güncellendi!";
         public static string RentsUnAveliable = "Uygun olmayan araç!";
         public static string RentsListed = "Satışlar listelendi";
+        public static string CarImageCountExceded = "Bir araç en fazla 5 adet resim alablir";
+        public static string CheckImageRestriction = "Fotoğraf kısıltlaması";
+        public static string FileDeletionException="Fotoğraf silme hatası";
+        public static string CarImageListed = "Fotoğraflar listelendi";
+        public static string CarImageNotFound = "Fotoğraf bulunamadı";
+        public static string CarImageUpdated="Fotoğraf Güncellendi";
     }
 }
 

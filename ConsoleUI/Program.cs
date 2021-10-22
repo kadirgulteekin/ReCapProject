@@ -45,35 +45,35 @@ namespace ConsoleUI
             Console.WriteLine(result.Message);
         }
 
-        private static void GetCarDetails()
-        {
-            CarManager carManager1 = new CarManager(new EfCarDal());
-            var result = carManager1.GetCarDetails();
+        //private static void GetCarDetails()
+        //{
+        //    CarManager carManager1 = new CarManager(new EfCarDal());
+        //    var result = carManager1.GetCarDetails();
 
-            if (result.Success == true)
-            {
-                foreach (var car in result.Data)
-                {
-                    Console.WriteLine(car.CarName + " " + car.BrandName + " " + car.ColorName + " " + car.DailyPrice);
-                }
-            }
-            else
-            {
-                Console.WriteLine(result.Message);
-            }
-        }
+        //    if (result.Success == true)
+        //    {
+        //        foreach (var car in result.Data)
+        //        {
+        //            Console.WriteLine(car.CarName + " " + car.BrandName + " " + car.ColorName + " " + car.DailyPrice);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine(result.Message);
+        //    }
+        //}
 
-        private static CarManager CarTest()
-        {
-            CarManager carManager = new CarManager(new EfCarDal());
+        //private static CarManager CarTest()
+        //{
+        //    CarManager carManager = new CarManager(new EfCarDal());
 
 
-            foreach (var car in carManager.GetByUnitPrice(40, 100).Data)
-            {
-                Console.WriteLine(car.Description);
-            }
+        //    foreach (var car in carManager.GetByUnitPrice(40, 100).Data)
+        //    {
+        //        Console.WriteLine(car.Description);
+        //    }
 
-            return carManager;
-        }
+        //    return carManager;
+        //}
     }
 }
