@@ -13,6 +13,7 @@ using Core.CrossCuttingConcerns.Validation;
 using Core.Aspects.Autofac.Validation;
 using System.Linq;
 using Core.Utilities.Business;
+using Business.BusinessAspects.Autofac;
 
 namespace Business.Concrete
 {
@@ -28,8 +29,9 @@ namespace Business.Concrete
 
         }
 
-
-        [ValidationAspect(typeof(CarValidator))]
+        //Cliam
+        [SecuredOperation("description.add,admin")]
+        //[ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
             IResult result = BusinessRules.Run(CheckIfCarImageCountExceded());
@@ -87,6 +89,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.Id == carId));
         }
 
+      
         private IResult CheckIfCarImageCountExceded()
         {
             var result = _carImageService.GetAll();

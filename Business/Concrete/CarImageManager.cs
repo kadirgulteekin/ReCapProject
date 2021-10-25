@@ -1,7 +1,9 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
-using Core.Utilities.Helpers.FileHelper;
+using Core.Utilities.Helpers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -17,23 +19,19 @@ namespace Business.Concrete
     public class CarImageManager : ICarImageService
     {
         ICarImageDal _carImageDal;
-        
+
         public CarImageManager(ICarImageDal carImageDal)
         {
             _carImageDal = carImageDal;
-           
+
 
         }
+        [ValidationAspect(typeof(CarImageValidator))]
         public IResult Add(IFormFile file, CarImage carImage)
         {
-            var imageCount = _carImageDal.GetAll(c => c.CarId == carImage.CarId).Count;
-
-            if (imageCount >= 5)
-            {
-                return new ErrorResult(Messages.CarImageCountExceded);
-            }
-
-            var imageResult = FileHelper.Upload(file);
+            //var imageCount = _carImageDal.GetAll(c => c.CarId == carImage.CarId).Count;
+            IResult result = BusinessRules.Run(CheckImageLimitExceeded(carImage.CarId));
+            var imageResult = FileUploadHelper.Upload(file);
 
             if (!imageResult.Success)
             {
@@ -59,6 +57,7 @@ namespace Business.Concrete
 
         public IDataResult<List<CarImage>> GetByCarId(int carId)
         {
+
             var result = _carImageDal.GetAll(i => i.CarId == carId);
             if (result.Count == 0)
             {
@@ -75,13 +74,14 @@ namespace Business.Concrete
 
         public IResult Update(IFormFile file, CarImage carImage)
         {
+         
             var image = _carImageDal.Get(c => c.Id == carImage.Id);
             if (image == null)
             {
                 return new ErrorResult(Messages.CarImageNotFound);
             }
 
-            var updatedFile = FileHelper.Update(file, image.ImagePath);
+            var updatedFile = FileUploadHelper.Update(file, image.ImagePath);
             if (!updatedFile.Success)
             {
                 return new ErrorResult(updatedFile.Message);
@@ -91,5 +91,20 @@ namespace Business.Concrete
             _carImageDal.Update(carImage);
             return new SuccessResult(Messages.CarImageUpdated);
         }
+
+
+        private IResult CheckImageLimitExceeded(int carid)
+        {
+            var carImagecount = _carImageDal.GetAll(p => p.CarId == carid).Count;
+            if (carImagecount >= 5)
+            {
+                return new ErrorResult(Messages.CarImageLimitExceeded);
+            }
+           
+            return new SuccessResult();
+        }
+        
+       
+
     }
 }

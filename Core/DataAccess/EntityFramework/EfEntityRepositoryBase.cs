@@ -5,39 +5,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.DataAccess.EntityFramework
 {
-    public class EfEntitiyRepositoryBase<TEntity,TContext>:IEntityRepository<TEntity>
-        where TEntity : class,IEntity,new()
-        where TContext: DbContext,new()  
+    public class EfEntitiyRepositoryBase<TEntity, TContext> : IEntityRepository<TEntity> where TEntity : class, IEntity, new() where TContext : DbContext, new()
     {
         public void Add(TEntity entity)
         {
             using (TContext context = new TContext())
             {
-                var addedEntity = context.Entry(entity);
+                var addedEntity = context.Entry(entity); 
                 addedEntity.State = EntityState.Added;
                 context.SaveChanges();
-            }
+
+            };
+        }
+
+        public void Update(TEntity entity)
+        {
+            using (TContext context = new TContext())
+            {
+                var updatedEntity = context.Entry(entity);  
+                updatedEntity.State = EntityState.Modified;
+                context.SaveChanges();
+
+            };
         }
 
         public void Delete(TEntity entity)
         {
             using (TContext context = new TContext())
             {
-                var deletedEntity = context.Entry(entity);
+                var deletedEntity = context.Entry(entity); 
                 deletedEntity.State = EntityState.Deleted;
                 context.SaveChanges();
-            }
+
+            };
         }
 
         public TEntity Get(Expression<Func<TEntity, bool>> filter)
         {
             using (TContext context = new TContext())
             {
-                return context.Set<TEntity>().SingleOrDefault(filter); //Benim Product tablomu döndürecek.
+                return context.Set<TEntity>().SingleOrDefault(filter);
             }
         }
 
@@ -45,19 +55,49 @@ namespace Core.DataAccess.EntityFramework
         {
             using (TContext context = new TContext())
             {
-                return filter == null
-                    ? context.Set<TEntity>().ToList() //Filtre null ise bu çalışır
-                    : context.Set<TEntity>().Where(filter).ToList(); //Filtre varsa bu çalışır.
+          
+
+                return filter == null ? context.Set<TEntity>().ToList() : context.Set<TEntity>().Where(filter).ToList();
             }
         }
 
-        public void Update(TEntity entity)
+        public bool Any(Expression<Func<TEntity, bool>> exp)
         {
             using (TContext context = new TContext())
             {
-                var updatedEntity = context.Entry(entity);
-                updatedEntity.State = EntityState.Modified;
-                context.SaveChanges();
+                return context.Set<TEntity>().Any(exp);
+            }
+        }
+
+        public TEntity GetByID(int id)
+        {
+            using (TContext context = new TContext())
+            {
+                return context.Set<TEntity>().Find(id);
+            }
+        }
+
+        public object Select(Expression<Func<TEntity, bool>> exp)
+        {
+            using (TContext context = new TContext())
+            {
+                return context.Set<TEntity>().Select(exp).ToList();
+            }
+        }
+
+        public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> exp)
+        {
+            using (TContext context = new TContext())
+            {
+                return context.Set<TEntity>().FirstOrDefault(exp);
+            }
+        }
+
+        public TEntity LastOrDefault(Expression<Func<TEntity, bool>> exp)
+        {
+            using (TContext context = new TContext())
+            {
+                return context.Set<TEntity>().LastOrDefault(exp);
             }
         }
     }

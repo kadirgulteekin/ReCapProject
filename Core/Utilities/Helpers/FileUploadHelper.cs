@@ -1,18 +1,17 @@
-﻿using Core.Constants;
-using Core.Utilities.Results;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-namespace Core.Utilities.Helpers.FileHelper
+using Core.Utilities.Results;
+
+namespace Core.Utilities.Helpers
 {
-    public class FileHelper
+    public class FileUploadHelper
     {
         private static string _currentDirectory = Environment.CurrentDirectory + "\\wwwroot";
-        private static string _folderName = "\\images\\";
+        private static string _folderName = "\\Images\\"; 
 
         public static IResult Upload(IFormFile file)
         {
@@ -22,7 +21,7 @@ namespace Core.Utilities.Helpers.FileHelper
                 return new ErrorResult(fileExists.Message);
             }
 
-            var type = Path.GetExtension(file.FileName);
+            var type = Path.GetExtension(file.FileName).ToLower();
             var typeValid = CheckFileTypeValid(type);
             var randomName = Guid.NewGuid().ToString();
 
@@ -34,7 +33,6 @@ namespace Core.Utilities.Helpers.FileHelper
             CheckDirectoryExists(_currentDirectory + _folderName);
             CreateImageFile(_currentDirectory + _folderName + randomName + type, file);
             return new SuccessResult((_folderName + randomName + type).Replace("\\", "/"));
-
         }
 
         public static IResult Update(IFormFile file, string imagePath)
@@ -45,7 +43,7 @@ namespace Core.Utilities.Helpers.FileHelper
                 return new ErrorResult(fileExists.Message);
             }
 
-            var type = Path.GetExtension(file.FileName);
+            var type = Path.GetExtension(file.FileName).ToLower();
             var typeValid = CheckFileTypeValid(type);
             var randomName = Guid.NewGuid().ToString();
 
@@ -66,20 +64,24 @@ namespace Core.Utilities.Helpers.FileHelper
             return new SuccessResult();
         }
 
+
+
+
         private static IResult CheckFileExists(IFormFile file)
         {
             if (file != null && file.Length > 0)
             {
                 return new SuccessResult();
             }
-            return new ErrorResult(Messages.FileNotExist); 
+            return new ErrorResult("File doesn't exists.");
         }
+
 
         private static IResult CheckFileTypeValid(string type)
         {
             if (type != ".jpeg" && type != ".png" && type != ".jpg")
             {
-                return new ErrorResult(Messages.WrongFImageType);
+                return new ErrorResult("Wrong file type.");
             }
             return new SuccessResult();
         }
@@ -91,7 +93,6 @@ namespace Core.Utilities.Helpers.FileHelper
                 Directory.CreateDirectory(directory);
             }
         }
-
         private static void CreateImageFile(string directory, IFormFile file)
         {
             using (FileStream fs = File.Create(directory))

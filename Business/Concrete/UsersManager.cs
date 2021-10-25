@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -11,9 +12,9 @@ namespace Business.Concrete
 {
     public class UsersManager : IUsersService
     {
-        IUsersDal _usersDal;
+        IUserDal _usersDal;
 
-        public UsersManager(IUsersDal usersDal)
+        public UsersManager(IUserDal usersDal)
         {
             _usersDal = usersDal;
         }
