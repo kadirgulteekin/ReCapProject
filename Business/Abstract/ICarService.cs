@@ -24,6 +24,8 @@ namespace Business.Abstract
 
         IDataResult<List<Car>> GetById(int carId);
 
+        IResult AddTransactionalTest(Car car);
+
        
 
 

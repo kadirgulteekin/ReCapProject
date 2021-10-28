@@ -11,16 +11,16 @@ namespace Core.CrossCuttingConcerns.Caching.Microsoft
 {
     public class MemoryCacheManager : ICacheManager
     {
-
-        IMemoryCache _cache;
-        public MemoryCacheManager()
+        //Adapter Pattern
+        IMemoryCache _cache; 
+        public MemoryCacheManager() //Construcor'dan enjekte etsek çalışmaz.
         {
             _cache = ServiceTool.ServiceProvider.GetService<IMemoryCache>();
         }
 
         public void Add(string key, object data, int duration)
         {
-            _cache.Set(key, data, TimeSpan.FromDays(duration));
+            _cache.Set(key, data, TimeSpan.FromMinutes(duration));
         }
 
         public T Get<T>(string key)
@@ -35,7 +35,7 @@ namespace Core.CrossCuttingConcerns.Caching.Microsoft
 
         public bool IsAdd(string key)
         {
-            var result = _cache.TryGetValue(key, out _);
+            var result = _cache.TryGetValue(key, out _); //Bir şey döndürmesini istemiyorsak out _ kullanıyoruz. 
             return result ;
 
         }
@@ -65,7 +65,7 @@ namespace Core.CrossCuttingConcerns.Caching.Microsoft
 
             foreach (var key in keysToRemove)
             {
-                _cache.Remove(key);
+                _cache.Remove(key); 
             }
         }
     }

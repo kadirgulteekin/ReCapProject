@@ -14,6 +14,9 @@ using Core.Aspects.Autofac.Validation;
 using System.Linq;
 using Core.Utilities.Business;
 using Business.BusinessAspects.Autofac;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
+using Core.Aspects.Autofac.Performance;
 
 namespace Business.Concrete
 {
@@ -31,7 +34,8 @@ namespace Business.Concrete
 
         //Cliam
         [SecuredOperation("description.add,admin")]
-        //[ValidationAspect(typeof(CarValidator))]
+        [ValidationAspect(typeof(CarValidator))]
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(Car car)
         {
             IResult result = BusinessRules.Run(CheckIfCarImageCountExceded());
@@ -48,6 +52,8 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarDeleted);
         }
 
+        [CacheAspect] //key,value
+        [PerformanceAspect(5)]
         public IDataResult<List<Car>> GetAll()
         {
             if (DateTime.Now.Hour == 20)
@@ -73,6 +79,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.ColorId == id));
         }
 
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(Car car)
         {
             _carDal.Update(car);
@@ -84,6 +91,8 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails());
         }
 
+        [CacheAspect] //key,value
+        [PerformanceAspect(1)]
         public IDataResult<List<Car>> GetById(int carId)
         {
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.Id == carId));
@@ -98,6 +107,19 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.CarImageCountExceded);
             }
             return new SuccessResult();
+        }
+
+        [TransactionScopeAspect]
+        public IResult AddTransactionalTest(Car car)
+        {
+            Add(car);
+            if (car.DailyPrice>10)
+            {
+                throw new Exception("");
+            }
+            Add(car);
+
+            return null;
         }
     }
 }
