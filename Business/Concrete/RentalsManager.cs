@@ -103,5 +103,7 @@ namespace Business.Concrete
             _rentalsDal.Update(rentals);
             return new SuccessResult(Messages.RentsUpdated);
         }
+
+        
     }
 }

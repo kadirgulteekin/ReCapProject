@@ -9,17 +9,17 @@ namespace ConsoleUI
 {
     class Program
     {
-        //    static void Main(string[] args)
-        //    {
-        //        //carmanager carmanager = cartest();
-        //        //GetCarDetails();
-        //        AddRents();
-        //        //AddUser();
+        static void Main(string[] args)
+        {
+            //carmanager carmanager = cartest();
+            //GetCarDetails();
+            //AddRents();
+            //AddUser();
 
 
-        //    }
+        }
 
-        //    private static void AddUser()
+        //private static void AddUser()
         //    {
         //        User user = new User { FirstName = "Kadir", LastName = "Gültekin", Email = "kadirgulteekin@gmail.com"};
         //        UsersManager usersManager = new UsersManager(new EfUserDal());
@@ -75,5 +75,5 @@ namespace ConsoleUI
 
         //    //    return carManager;
         //    //}
-        }
     }
+}

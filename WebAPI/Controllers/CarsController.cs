@@ -25,6 +25,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
+      
         public IActionResult GetAll()
         {
             //Dependency Chain---

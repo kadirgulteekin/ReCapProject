@@ -1,25 +1,24 @@
-﻿using Core.Utilities.Interceptors;
-using Core.Utilities.IoC;
-using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Castle.DynamicProxy;
-using Microsoft.Extensions.DependencyInjection;
 using Business.Constants;
+using Castle.DynamicProxy;
+using Core.Utilities.Interceptors;
+using Core.Utilities.IoC;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Core.Extentions;
 
 namespace Business.BusinessAspects.Autofac
 {
     public class SecuredOperation : MethodInterception
     {
-        //JWT
         private string[] _roles;
-        private IHttpContextAccessor _httpContextAccessor; //
+        private IHttpContextAccessor _httpContextAccessor;
 
         public SecuredOperation(string roles)
         {
-            _roles = roles.Split(','); //Gönderdiğin eleman kadar array haline getiriyor.
+            _roles = roles.Split(',');
             _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
 
         }
