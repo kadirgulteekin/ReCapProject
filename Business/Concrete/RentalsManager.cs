@@ -56,15 +56,15 @@ namespace Business.Concrete
             return new SuccessDataResult<Rental>(_rentalsDal.Get(p => p.Id == Id));
         }
 
-        public IDataResult<List<CarRentDetailDto>> GetCarRentDetail()
+        public IDataResult<List<CarRentDetailDto>> GetCarRentDetails()
         {
-            return new SuccessDataResult<List<CarRentDetailDto>>(_rentalsDal.GetRentalDetails());
+            return new SuccessDataResult<List<CarRentDetailDto>>(_rentalsDal.GetCarRentDetails());
         }
 
-        public IDataResult<List<CarRentDetailDto>> GetCarRentDetail(int carId)
-        {
-            return new SuccessDataResult<List<CarRentDetailDto>>(_rentalsDal.GetCarRentDetailByCar(carId));
-        }
+        //public IDataResult<List<CarRentDetailDto>> GetCarRentDetail(int carId)
+        //{
+        //    return new SuccessDataResult<List<CarRentDetailDto>>(_rentalsDal.GetCarRentDetailByCarId(carId));
+        //}
 
         public IResult IsAvailableForRent(int carId)
         {

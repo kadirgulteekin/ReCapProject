@@ -12,22 +12,28 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfRentalsDal : EfEntitiyRepositoryBase<Rental, CarContext>, IRentalsDal
     {
-        public List<CarRentDetailDto> GetCarRentDetailByCar(int carId)
-        {
-            var resultlist = GetRentalDetails();
-            return resultlist.Where(c => c.CarId == carId).ToList();
-
-        }
-
-        public List<CarRentDetailDto> GetRentalDetails()
+  
+        public List<CarRentDetailDto> GetCarRentDetails()
         {
             using (CarContext context = new CarContext())
             {
                 var result = from c in context.Cars
                              join r in context.Rentals
-                             on c.Id equals r.CarId into temp
-                             from t in temp.DefaultIfEmpty()
-                             select new CarRentDetailDto { CarId = c.Id, RentalId = t.Id, ReturnDate = t.ReturnDate };
+                             on c.Id equals r.CarId
+                             join b in context.Brands
+                             on c.BrandId equals b.BrandId
+                             join cs in context.Customers
+                             on r.CustomerId equals cs.Id
+                             join us in context.Users
+                             on cs.UserId equals us.UserId
+                            
+                             select new CarRentDetailDto 
+                             {
+                                 BrandName = b.BrandName,
+                                 FullName = us.FirstName + " " + us.LastName,
+                                 RentDate = r.RentDate,
+                                 ReturnDate = r.ReturnDate
+                             };
 
 
 
