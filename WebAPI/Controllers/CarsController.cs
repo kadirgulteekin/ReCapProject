@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
         public IActionResult GetAll()
         {
             //Dependency Chain---
-            Thread.Sleep(5000);
+            Thread.Sleep(1000);
             var result = _carService.GetAll();
             if (result.Success)
             {
@@ -51,11 +51,12 @@ namespace WebAPI.Controllers
             return BadRequest(result.Message);
 
         }
-        [HttpGet("getcarsbybrandid")]
-        public IActionResult GetCarsByBrandId(int id)
+
+        [HttpGet("getcarsbybrand")]
+        public IActionResult GetCarsByBrandId(int brandId)
         {
 
-            var result = _carService.GetCarsByBrandId(id);
+            var result = _carService.GetCarsByBrandId(brandId);
             if (result.Success)
             {
                 return Ok(result.Data);
@@ -63,6 +64,7 @@ namespace WebAPI.Controllers
             return BadRequest(result.Message);
 
         }
+
         [HttpGet("getcarsbycolordid")]
         public IActionResult GetCarsByColordId(int id)
         {
