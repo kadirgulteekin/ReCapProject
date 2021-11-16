@@ -79,9 +79,9 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.BrandId == id), Messages.CarsListed);
         }
 
-        public IDataResult<List<Car>> GetCarsByColorId(int id)
+        public IDataResult<List<CarDetailDto>> GetCarsByColorId(int id)
         {
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.ColorId == id));
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(p => p.ColorId == id));
         }
 
         [CacheRemoveAspect("ICarService.Get")]
